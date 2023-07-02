@@ -18,8 +18,37 @@ local ABS = math.abs
 --#endregion
 
 
-function say_hello()
-	game.print("Hello")
+function clear()
+	-- clear beltlines
+	for _, type in pairs{"transport-belt","underground-belt","splitter"} do
+		for _, belt in pairs(game.player.surface.find_entities_filtered{type=type}) do
+			for i = 1, belt.get_max_transport_line_index() do
+				belt.get_transport_line(i).clear()
+			end
+		end
+	end
+	-- clear fluid boxes
+	for _, type in pairs{"pipe","pipe-to-ground","storage-tank", "boiler", "offshore-pump", "pump", "pumpjack", "mining-drill", "furnace", "assembling-machine","fluid-wagon"} do
+		for _, ent in pairs(game.player.surface.find_entities_filtered{type=type}) do
+			ent.clear_fluid_inside()
+		end
+	end
+	-- clear item boxes
+	for _, type in pairs{"inserter","furnace","container", "cargo-wagon","lab","assembling-machine","boiler"} do
+		for _, ent in pairs(game.player.surface.find_entities_filtered{type=type}) do
+		ent.clear_items_inside()
+		end
+	end
+	-- clear crafting queues
+	for _, type in pairs{"furnace","boiler","assembling-machine"} do
+		for _, ent in pairs(game.player.surface.find_entities_filtered{type=type}) do
+			ent.crafting_progress = 0
+		end
+	end
+	-- clear ground items
+	for _, item in pairs(game.player.surface.find_entities_filtered{type="item-entity"}) do
+		item.destroy()
+	end
 end
 
 --#region Functions of events
@@ -81,17 +110,17 @@ local interface = {
 		-- return custom_events[name] -- usually, it's enough
 		game.print("ID: " .. tostring(custom_events[name]))
 	end,
-	say_hello = say_hello
+	clear = clear
 }
 
 local function add_remote_interface()
 	-- https://lua-api.factorio.com/latest/LuaRemote.html
-	remote.remove_interface("example-mod") -- For safety
-	remote.add_interface("example-mod", interface)
+	remote.remove_interface("demand") -- For safety
+	remote.add_interface("demand", interface)
 end
 -- You can create interface outside events
 -- However, the game have to "load" with the mod in order to use functions of the interface
-remote.add_interface("example-mod", interface)
+remote.add_interface("demand", interface)
 
 
 local function link_data()

@@ -1,11 +1,11 @@
 {
-	"name": "example-mod",
-	"version": "0.5.2",
+	"name": "demand",
+	"version": "0.0.1",
 	"factorio_version": "1.1",
-	"title": "Example mod",
-	"author": "Put your nickname",
+	"title": "Demand mod",
+	"author": "Fabo",
 	"contact": "Put your contacts",
-	"homepage": "Put a link",
+	"homepage": "",
 	"description": "See locale/en ",
 	"dependencies": [
 		"? zk-lib >= 0.10.0",
